@@ -10,8 +10,9 @@
   (defalias 'yes-or-no-p 'y-or-n-p)
   (global-linum-mode t)
   (use-package doom-themes
+    :ensure color-theme-sanityinc-tomorrow
     :config
-    (load-theme 'doom-material t))
+    (load-theme 'sanityinc-tomorrow-blue t))
 #+END_SRC
 * editors
 #+BEGIN_SRC emacs-lisp :tangle yes 
@@ -250,10 +251,6 @@
 * org
 ** basic
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package org-superstar
-    :config
-    (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1))))
-
   (with-eval-after-load 'org       
     (setq org-startup-indented t) ; Enable `org-indent-mode' by default
     (add-hook 'org-mode-hook #'visual-line-mode))
@@ -277,8 +274,8 @@
     ;;         "xelatex -interaction nonstopmode -output-directory %o %f"
     ;;         "xelatex -interaction nonstopmode -output-directory %o %f"))
 
-    (setq org-latex-listings 'minted
-          org-latex-packages-alist '(("" "minted")))
+    ;; (setq org-latex-listings 'minted
+    ;;       org-latex-packages-alist '(("" "minted")))
 
     ;; (setq org-latex-pdf-process
     ;;       '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
