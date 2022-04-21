@@ -82,6 +82,7 @@
         "%LINE%",
         "%PDF%",
     ],
+    "latex-workshop.latex.recipe.default": "lastUsed",
     "terminal.integrated.commandsToSkipShell": [
         "language-julia.interrupt"
     ],
@@ -90,10 +91,13 @@
     "jupyter.askForKernelRestart": false,
     "editor.minimap.enabled": false,
     "editor.formatOnSave": true,
-    "workbench.colorTheme": "Monokai",
+    "workbench.colorTheme": "Tomorrow Night Blue",
     "editor.fontFamily": "Monaco,Inconsolata,'Fira Code',Robot,Consolas, 'Courier New', monospace",
     "editor.fontSize": 16,
     "window.zoomLevel": -1,
+    "editor.occurrencesHighlight": false,
+    "editor.unicodeHighlight.ambiguousCharacters": false,
+    "editor.wordWrap": "on",
     // // In sumatraPDF
     // InverseSearchCmdLine = "C:\Users\qiuli\AppData\Local\Programs\Microsoft VS Code\Code.exe" "C:\Users\qiuli\AppData\Local\Programs\Microsoft VS Code\resources\app\out\cli.js"  --ms-enable-electron-run-as-node -r -g "%f:%l"
     // EnableTeXEnhancements = true
