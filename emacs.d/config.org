@@ -10,9 +10,8 @@
   (defalias 'yes-or-no-p 'y-or-n-p)
   (global-linum-mode t)
   (use-package doom-themes
-    :ensure color-theme-sanityinc-tomorrow
     :config
-    (load-theme 'sanityinc-tomorrow-blue t))
+    (load-theme 'doom-tomorrow-day t))
 #+END_SRC
 * editors
 #+BEGIN_SRC emacs-lisp :tangle yes 
@@ -75,6 +74,7 @@
 #+BEGIN_SRC emacs-lisp :tangle yes 
   (use-package evil
     :config
+    (evil-define-key 'normal org-mode-map (kbd "<tab>") #'org-cycle)
     (evil-mode t))
 
   (use-package evil-commentary
@@ -125,9 +125,9 @@
 
   (use-package magit)
 
-  (use-package hungry-delete
-    :config
-    (global-hungry-delete-mode))
+  ;; (use-package hungry-delete
+  ;;   :config
+  ;;   (global-hungry-delete-mode))
 
   (use-package exec-path-from-shell
     :config
