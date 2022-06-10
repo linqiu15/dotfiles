@@ -99,6 +99,186 @@
     (global-set-key (kbd "C-x C-t") 'counsel-load-theme)
     )
 #+END_SRC
+* email
+#+begin_src emacs-lisp :tangle yes
+  (add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e")
+  (use-package org-mime
+    :config
+    (require 'mu4e)
+    (require 'smtpmail)
+    (require 'org-mu4e)
+
+    ;; 配置 mu4e 作为 MUA 以及基本的邮件信息配置
+    (setq mail-user-agent 'mu4e-user-agent)
+    (setq user-full-name "Lin Qiu")
+    (setq user-mail-address "qiulin@ihep.ac.cn")
+
+    ;; 配置使用 offlieimap 收取邮件
+    (setq
+     mu4e-get-mail-command "offlineimap"   ;; 使用 offlineimap 获取邮件
+     mu4e-update-interval 300)             ;; 每五分钟检查邮件并更新索引 (配置单位：秒)
+
+    ;; 配置默认 smtp 服务以使用 smtpmail mode 发送 Email
+    ;; SMTP 服务需要认证，我采用 ~/.authinfo 的方式提供认证信息。
+    ;; 有关 SMTP 认证, 参阅 https://www.emacswiki.org/emacs/SmtpAuth
+    (setq send-mail-function 'smtpmail-send-it
+          message-send-mail-function 'smtpmail-send-it
+          smtpmail-auth-credentials "~/.authinfo"
+          smtpmail-stream-type  'starttls)
+
+    ;; set default values about mu4e
+    (setq
+     ;; auto update maildir with isync and index it
+     mu4e-update-interval 300
+     ;; don't do a full cleanup check
+     mu4e-index-cleanup nil
+     ;; don't consider up-to-date dirs
+     mu4e-index-lazy-check t
+     ;; show images in message mode
+     mu4e-view-show-images t
+     ;; set the default download dir for attachment
+     mu4e-attachment-dir "~/Downloads"
+     ;; prefer html view
+     mu4e-view-prefer-html t
+     ;; don't save message to sent messages, gmail/imap takes care of this
+     ;; (see the documentation for `mu4e-sent-messages-behavior' if you have
+     ;; additional non-gmail addresses and want assign them different
+     ;; behavior.)
+     mu4e-sent-messages-behavior 'delete
+     )
+
+    ;; set default values for sending mails
+    (setq
+     ;; user agent when send mail
+     mail-user-agent 'mu4e-user-agent
+     ;; 设置邮件发送方法为 smtpmail
+     message-send-mail-function 'smtpmail-send-it
+     ;; 根据 from 邮件头使用正确的账户上下文发送 email.
+     message-sendmail-envelope-from 'header
+     ;; 设置邮箱认证加密方式
+     smtpmail-stream-type 'ssl
+     ;; don't keep message buffers around
+     message-kill-buffer-on-exit t
+     )
+
+    ;; some information about me
+    (setq
+     user-full-name  "Lin Qiu"
+     ;; set a mail address list using when reply a message
+     mu4e-user-mail-address-list '("qiulin@ihep.ac.cn"
+                                   "qiulin15@mails.ucas.ac.cn")
+     mu4e-compose-signature
+     (concat
+      "Best wishes,\n"
+      "Lin Qiu")
+     )
+
+    ;; 该函数基于当前所在的 maildir 来判定所账户上下文。
+    ;; (defun mu4e-message-maildir-matches (msg rx)
+    ;;   (when rx
+    ;;     (if (listp rx)
+    ;;         ;; If rx is a list, try each one for a match
+    ;;         (or (mu4e-message-maildir-matches msg (car rx))
+    ;;             (mu4e-message-maildir-matches msg (cdr rx)))
+    ;;       ;; Not a list, check rx
+    ;;       (string-match rx (mu4e-message-field msg :maildir)))))
+
+    ;; 设置 mu4e 上下文
+    (setq mu4e-contexts
+          `( ,(make-mu4e-context
+               :name "IHEP"
+               :enter-func (lambda ()
+                             (mu4e-message "Entering IHEP context")
+                             ;; update index after switch context, otherwise the
+                             ;; counting is not updated
+                             (mu4e-update-index))
+               :leave-func (lambda () (mu4e-message "Leaving IHEP context"))
+               ;; we match based on the contact-fields of the message
+               :match-func (lambda (msg)
+                             (when msg
+                               (string-match-p "qiulin@ihep.ac.cn" (mu4e-message-field msg :maildir))))
+
+               :vars '((user-mail-address             . "qiulin@ihep.ac.cn")
+                       (mu4e-sent-folder              . "/IHEP/Sent")
+                       (mu4e-drafts-folder            . "/IHEP/Drafts")
+                       (mu4e-trash-folder             . "/IHEP/Trash")
+                       (mu4e-refile-folder            . "/IHEP/Refile")
+                       (smtpmail-default-smtp-server  . "mail.ihep.ac.cn")
+                       (smtpmail-smtp-server          . "mail.ihep.ac.cn")
+                       (smtpmail-smtp-service         . 465)
+                       (mu4e-get-mail-command         . "offlineimap")
+                       (mu4e-maildir-shortcuts . (("/IHEP/INBOX"   . ?i)
+                                                  ("/IHEP/Sent"    . ?s)
+                                                  ("/IHEP/Refile"  . ?r)
+                                                  ("/IHEP/Trash"   . ?t)
+                                                  ("/IHEP/Drafts"  . ?d)))
+                       (mu4e-bookmarks . ( ("maildir:/IHEP/INBOX AND flag:unread AND NOT flag:trashed"   "Unread messages"        ?u)
+                                           ("maildir:/IHEP/INBOX AND date:today..now"                    "Today's messages"       ?t)
+                                           ("maildir:/IHEP/INBOX AND date:7d..now"                       "Last 7 days"            ?w)
+                                           ("maildir:/IHEP/INBOX AND date:1d..now"                       "Last 1 days"            ?o)
+                                           ("maildir:/IHEP/INBOX"                                        "Inbox"                  ?i)
+                                           ("maildir:/IHEP/Sent"                                         "Sent"                   ?s)
+                                           ("maildir:/IHEP/Refile"                                       "Refile"                 ?r)
+                                           ("maildir:/IHEP/Trash"                                        "Trash"                  ?t)
+                                           ("maildir:/IHEP/Drafts"                                       "Drafts"                 ?d)
+                                           ("maildir:/IHEP/INBOX AND mime:image/*"                       "Messages with images"   ?p)))
+                       ))
+
+             ,(make-mu4e-context
+               :name "COREMAIL"
+               :enter-func (lambda ()
+                             (mu4e-message "Switch to the COREMAIL context")
+                             (mu4e-update-index))
+               :match-func (lambda (msg)
+                             (when msg
+                               (string-match-p "qiulin15@mails.ucas.ac.cn" (mu4e-message-field msg :maildir))))
+
+               :vars '((user-mail-address             . "qiulin15@mails.ucas.ac.cn")
+                       (mu4e-sent-folder              . "/COREMAIL/Sent")
+                       (mu4e-drafts-folder            . "/COREMAIL/Drafts")
+                       (mu4e-trash-folder             . "/COREMAIL/Trash")
+                       (mu4e-refile-folder            . "/COREMAIL/Refile")
+                       (smtpmail-default-smtp-server  . "mail.cstnet.cn")
+                       (smtpmail-smtp-server          . "mail.cstnet.cn")
+                       (smtpmail-smtp-service         . 25)
+                       (mu4e-get-mail-command         . "offlineimap")
+                       (mu4e-maildir-shortcuts . (("/COREMAIL/INBOX"   . ?i)
+                                                  ("/COREMAIL/Sent"    . ?s)
+                                                  ("/COREMAIL/Refile"  . ?r)
+                                                  ("/COREMAIL/Trash"   . ?t)
+                                                  ("/COREMAIL/Drafts"  . ?d)))
+                       (mu4e-bookmarks . ( ("maildir:/COREMAIL/INBOX AND flag:unread AND NOT flag:trashed"   "Unread messages"        ?u)
+                                           ("maildir:/COREMAIL/INBOX AND date:today..now"                    "Today's messages"       ?t)
+                                           ("maildir:/COREMAIL/INBOX AND date:7d..now"                       "Last 7 days"            ?w)
+                                           ("maildir:/COREMAIL/INBOX AND date:1d..now"                       "Last 1 days"            ?o)
+                                           ("maildir:/COREMAIL/INBOX"                                        "Inbox"                  ?i)
+                                           ("maildir:/COREMAIL/Sent"                                         "Sent"                   ?s)
+                                           ("maildir:/COREMAIL/Refile"                                       "Refile"                 ?r)
+                                           ("maildir:/COREMAIL/Trash"                                        "Trash"                  ?t)
+                                           ("maildir:/COREMAIL/Drafts"                                       "Drafts"                 ?d)
+                                           ("maildir:/COREMAIL/INBOX AND mime:image/*"                       "Messages with images"   ?p)))
+                       ))))
+
+    ;; start with the first (default) context;
+    ;; default is to ask-if-none (ask when there's no context yet, and none match)
+    (setq mu4e-context-policy 'pick-first)
+
+
+    ;; auto enable the org-mu4e-compose-org-mode when enter the mu4e-compose-mode
+    (add-hook 'mu4e-compose-mode-hook
+              (defun do-compose-stuff ()
+                (org-mu4e-compose-org-mode)))
+
+    (defun htmlize-and-send ()
+      "When in an org-mu4e-compose-org-mode message, htmlize and send it."
+      (interactive)
+      (when (member 'org~mu4e-mime-switch-headers-or-body post-command-hook)
+        (org-mime-htmlize)
+        (message-send-and-exit)))
+
+    (add-hook 'org-ctrl-c-ctrl-c-hook 'htmlize-and-send t)
+    )
+#+end_src
 * programming
 #+BEGIN_SRC emacs-lisp :tangle yes 
   (use-package company

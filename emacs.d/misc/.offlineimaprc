@@ -1,0 +1,44 @@
+[general]
+accounts = IHEP,COREMAIL
+maxsyncaccounts = 2
+
+[Account COREMAIL]
+localrepository = LocalCOREMAIL
+remoterepository = RepositoryCOREMAIL
+autorefresh = 5
+quick = 10
+postsynchook = mu init --maildir ~/.Maildir
+
+[Repository LocalCOREMAIL]
+type = Maildir
+localfolders = ~/.Maildir/COREMAIL
+
+[Repository RepositoryCOREMAIL]
+type = IMAP
+maxconnections = 2
+remotehost = mail.cstnet.cn
+remoteuser = 
+remotepass = 
+folderfilter = lambda foldername: foldername not in ['[COREMAIL]/All Mail', '[COREMAIL]/Important']
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+ssl=no
+
+[Account IHEP]
+localrepository = LocalIHEP
+remoterepository = RepositoryIHEP
+autorefresh = 5
+quick = 10
+postsynchook = mu init --maildir ~/.Maildir
+
+[Repository LocalIHEP]
+type = Maildir
+localfolders = ~/.Maildir/IHEP
+
+[Repository RepositoryIHEP]
+type = IMAP
+maxconnections = 2
+remotehost = mail.ihep.ac.cn
+remoteuser = 
+remotepass = 
+folderfilter = lambda foldername: foldername not in ['[IHEP]/All Mail', '[IHEP]/Important']
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt

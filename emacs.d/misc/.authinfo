@@ -1,0 +1,2 @@
+machine mail.ihep.ac.cn login xxx  port 465 password   xxx
+machine mail.cstnet.cn login xxx  port 994 password  xxx
