@@ -1,0 +1,10 @@
+;;;; Emacs Bookmark Format Version 1 ;;;; -*- coding: utf-8-emacs -*-
+;;; This format is meant to be slightly human-readable;
+;;; nevertheless, you probably don't want to edit it.
+;;; -*- End Of Bookmark File Format Version Stamp -*-
+(("posts"
+ (filename . "~/Nutstore Files/Nutstore/codes/github/linqiu15.github.io/_posts/")
+ (front-context-string . "2022-04-04-vscod")
+ (rear-context-string . "03  5月 28 11:55 ")
+ (position . 253))
+)
