@@ -26,49 +26,6 @@
   (use-package cnfonts
     :config
     (cnfonts-enable))
-
-  (use-package pyim
-    :ensure pyim-basedict
-    :config
-  
-    (setq default-input-method "pyim")
-
-    ;; 金手指设置，可以将光标处的编码，比如：拼音字符串，转换为中文。
-    (global-set-key (kbd "M-j") 'pyim-convert-string-at-point)
-
-    ;; 按 "C-<return>" 将光标前的 regexp 转换为可以搜索中文的 regexp.
-    (define-key minibuffer-local-map (kbd "C-<return>") 'pyim-cregexp-convert-at-point)
-
-    ;; 我使用全拼
-    (pyim-default-scheme 'quanpin)
-    ;; (pyim-default-scheme 'wubi)
-    ;; (pyim-default-scheme 'cangjie)
-
-    ;; pyim 探针设置
-    ;; 设置 pyim 探针设置，这是 pyim 高级功能设置，可以实现 *无痛* 中英文切换 :-)
-    ;; 我自己使用的中英文动态切换规则是：
-    ;; 1. 光标只有在注释里面时，才可以输入中文。
-    ;; 2. 光标前是汉字字符时，才能输入中文。
-    ;; 3. 使用 M-j 快捷键，强制将光标前的拼音字符串转换为中文。
-    ;; (setq-default pyim-english-input-switch-functions
-    ;;               '(pyim-probe-dynamic-english
-    ;;                 pyim-probe-isearch-mode
-    ;;                 pyim-probe-program-mode
-    ;;                 pyim-probe-org-structure-template))
-
-    ;; (setq-default pyim-punctuation-half-width-functions
-    ;;               '(pyim-probe-punctuation-line-beginning
-    ;;                 pyim-probe-punctuation-after-punctuation))
-
-    ;; 开启代码搜索中文功能（比如拼音，五笔码等）
-    (pyim-isearch-mode 1)
-
-    ;; 显示5个候选词。
-    (setq pyim-page-length 5)
-
-    ;; Basedict
-    (require 'pyim-basedict)
-    (pyim-basedict-enable))
 #+END_SRC
 * evil
 #+BEGIN_SRC emacs-lisp :tangle yes 
@@ -101,7 +58,7 @@
 #+END_SRC
 * email
 #+begin_src emacs-lisp :tangle yes
-  (add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e")
+  (add-to-list 'load-path "/opt/homebrew/opt/mu/share/emacs/site-lisp/mu/mu4e")
   (use-package org-mime
     :config
     (require 'mu4e)
@@ -305,9 +262,9 @@
 
   (use-package magit)
 
-  ;; (use-package hungry-delete
-  ;;   :config
-  ;;   (global-hungry-delete-mode))
+  (use-package hungry-delete
+    :config
+    (global-hungry-delete-mode))
 
   (use-package exec-path-from-shell
     :config
@@ -323,7 +280,7 @@
     :config
     (custom-set-variables
      '(shell-pop-shell-type (quote ("ansi-term" "*ansi-term*" (lambda nil (ansi-term shell-pop-term-shell)))))
-     '(shell-pop-term-shell "/usr/bin/zsh")
+     '(shell-pop-term-shell "/bin/zsh")
      '(shell-pop-universal-key "C-c t")
      '(shell-pop-window-size 30)
      '(shell-pop-full-span t)
@@ -408,7 +365,7 @@
 
   (use-package lsp-julia
     :config
-    (setq lsp-julia-default-environment "~/.julia/environments/v1.7"))
+    (setq lsp-julia-default-environment "~/.julia/environments/v1.8/"))
 #+END_SRC
 ** misc
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -473,7 +430,7 @@
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package org-re-reveal
     :config
-    (setq org-re-reveal-root "file:///home/ql/.emacs.d/misc/reveal.js"))
+    (setq org-re-reveal-root "file:///Users/qiulin/.emacs.d/misc/reveal.js"))
 #+END_SRC
 * customization
 #+BEGIN_SRC emacs-lisp :tangle yes
