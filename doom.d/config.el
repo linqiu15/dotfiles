@@ -96,3 +96,8 @@
 
 ;;org
 (setq org-re-reveal-root "file:///Users/qiulin/.doom.d/misc/reveal.js")
+
+(require 'ox-latex)
+(add-to-list 'org-latex-packages-alist '("" "minted"))
+(setq org-latex-listings 'minted)
+(setq org-latex-pdf-process '("latexmk -f -pdf -%latex -shell-escape -interaction=nonstopmode -output-directory=%o %f"))
