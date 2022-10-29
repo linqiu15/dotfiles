@@ -11,7 +11,7 @@
   (global-linum-mode t)
   (use-package doom-themes
     :config
-    (load-theme 'doom-tomorrow-day t))
+    (load-theme 'doom-material t))
 #+END_SRC
 * editors
 #+BEGIN_SRC emacs-lisp :tangle yes 
