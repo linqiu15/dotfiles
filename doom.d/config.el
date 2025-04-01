@@ -32,7 +32,7 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-one)
+(setq doom-theme 'doom-monokai-pro)
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -78,7 +78,7 @@
 (use-package! cnfonts
   :config
   (cnfonts-enable))
-(setq lsp-julia-default-environment "~/.julia/environments/v1.8")
+(setq lsp-julia-default-environment "~/.julia/environments/v1.11")
 (setq python-shell-interpreter "ipython")
 (setq +latex-viewers '(skim))
 (setq reftex-default-bibliography "/Users/qiulin/Nutstore Files/Nutstore/org/ref.bib")
