@@ -37,17 +37,39 @@ This function should only modify configuration layer settings."
      ;; Uncomment some layer names and press `SPC f e R' (Vim style) or
      ;; `M-m f e R' (Emacs style) to install them.
      ;; ----------------------------------------------------------------
-     auto-completion
-     better-defaults
+     (spell-checking :variables spell-checking-enable-by-default nil)
+     (syntax-checking :variables
+                      syntax-checking-enable-by-default nil)
+     (auto-completion :variables
+                      auto-completion-enable-sort-by-usage t)
+     (templates :variables templates-private-directory "~/.spacemacs.d/templates")
+     (better-defaults :variables
+                      better-defaults-move-to-beginning-of-code-first t
+                      better-defaults-move-to-end-of-code-first t)
      emacs-lisp
+     (mu4e :variables
+           mu4e-installation-path "/opt/homebrew/Cellar/mu/1.12.9/share/emacs/site-lisp/mu/mu4e/"
+           mu4e-enable-notifications t
+           mu4e-enable-mode-line t
+           mu4e-org-compose-support t)
      git
      helm
      lsp
      markdown
      multiple-cursors
      (org :variables
+          org-enable-notifications t
+          org-start-notification-daemon-on-startup t
+          org-enable-github-support t
           org-enable-reveal-js-support t
+          org-enable-org-journal-support t
+          org-project-capture-projects-file "TODOs.org"
+          org-enable-org-brain-support t
+          org-enable-roam-support t
+          org-enable-roam-ui t
+          org-enable-roam-protocol t
           org-enable-modern-support t)
+     semantic
      (shell :variables
             shell-default-height 30
             shell-default-position 'bottom)
@@ -58,14 +80,22 @@ This function should only modify configuration layer settings."
      neotree
      chinese
      bibtex
-     c-c++
-     julia
-     latex
+     (c-c++ :variables c-c++-backend 'lsp-clangd
+            c-c++-default-mode-for-headers 'c++-mode
+            c-c++-enable-organize-includes-on-save t
+            c-c++-enable-clang-format-on-save t)
+     (julia :variables julia-backend 'lsp)
+     csv
+     (latex :variables latex-backend 'company-auctex
+            latex-enable-folding t)
      markdown
-     python
+     (python :variables python-backend 'anaconda
+             python-format-on-save t)
      deft
-     elfeed
+     (elfeed :variables rmh-elfeed-org-files (list "~/.spacemacs.d/private/elfeed.org"))
      pdf
+     bm
+     imenu-list
      lsp
      pandoc
      )
@@ -224,7 +254,7 @@ It should only modify the values of Spacemacs settings."
    ;; package can be defined with `:package', or a theme can be defined with
    ;; `:location' to download the theme package, refer the themes section in
    ;; DOCUMENTATION.org for the full theme specifications.
-   dotspacemacs-themes '(doom-monokai-pro
+   dotspacemacs-themes '(doom-zenburn
                          spacemacs-dark
                          spacemacs-light)
 
@@ -235,7 +265,8 @@ It should only modify the values of Spacemacs settings."
    ;; refer to the DOCUMENTATION.org for more info on how to create your own
    ;; spaceline theme. Value can be a symbol or list with additional properties.
    ;; (default '(spacemacs :separator wave :separator-scale 1.5))
-   dotspacemacs-mode-line-theme '(spacemacs :separator wave :separator-scale 1.5)
+   dotspacemacs-mode-line-theme '(all-the-icons)
+   ;; dotspacemacs-mode-line-theme '(spacemacs :separator wave :separator-scale 1.5)
 
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
    ;; (default t)
@@ -430,7 +461,7 @@ It should only modify the values of Spacemacs settings."
    ;;   :size-limit-kb 1000)
    ;; When used in a plist, `visual' takes precedence over `relative'.
    ;; (default nil)
-   dotspacemacs-line-numbers nil
+   dotspacemacs-line-numbers 'visual
 
    ;; Code folding method. Possible values are `evil', `origami' and `vimish'.
    ;; (default 'evil)
@@ -576,7 +607,6 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
         '(("melpa-cn" . "http://mirrors.cloud.tencent.com/elpa/melpa/")
           ("gnu-cn"   . "http://mirrors.cloud.tencent.com/elpa/gnu/")
           ("org-cn"   . "http://mirrors.cloud.tencent.com/elpa/org/")))
-  (cnfonts-enable)
   )
 
 
@@ -594,8 +624,31 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
+
+  (org-babel-load-file "~/.spacemacs.d/config.org")
+  (setq custom-file "~/.spacemacs.d/custom.el")
+  (load custom-file)
   )
 
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
+(defun dotspacemacs/emacs-custom-settings ()
+  "Emacs custom settings.
+This is an auto-generated function, do not modify its content directly, use
+Emacs customize menu instead.
+This function is called at the very end of Spacemacs initialization."
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(smtpmail-smtp-server "mail.ihep.ac.cn")
+ '(smtpmail-smtp-service 25))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+)
