@@ -11,7 +11,7 @@
   (global-display-line-numbers-mode 1)
   (use-package doom-themes
     :config
-    (load-theme 'doom-zenburn t))
+    (load-theme 'doom-tomorrow-night t))
 #+END_SRC
 * editors
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -409,6 +409,47 @@
    '((emacs-lisp . nil)
      (python . t)))
 #+END_SRC
+** GTD
+#+begin_src emacs-lisp :tangle yes
+  (global-set-key (kbd "C-c l") #'org-store-link)
+  (global-set-key (kbd "C-c a") #'org-agenda)
+  (global-set-key (kbd "C-c c") #'org-capture)
+  (setq org-directory "~/Nutstore Files/Nutstore/org/")
+  (setq org-default-notes-file (concat org-directory "/notes.org"))
+  (setq org-gtd-file (concat org-directory "/gtd.org"))
+  (setq org-agenda-files '("~/Nutstore Files/Nutstore/org/"))
+
+  (setq org-capture-templates
+        '(("t" "Todo" entry (file+headline org-gtd-file "Tasks")
+  	 "* TODO %?\n  %i")
+  	("w" "Web site" entry
+  	 (file "")
+  	 "* %a :website:\n\n%U %?\n\n%:initial")
+  	))
+#+end_src
+** org-journal
+#+begin_src emacs-lisp :tangle yes
+  (use-package org-journal
+    :ensure t
+    :defer t
+    :init
+    ;; Change default prefix key; needs to be set before loading org-journal
+    ;; (setq org-journal-prefix-key "C-c j ")
+    (global-set-key (kbd "C-c j") #'org-journal-new-entry)
+    :config
+    (setq org-journal-dir "~/Nutstore Files/Nutstore/org/journal/")
+    (setq org-journal-file-format "%Y-%m-%d.org")
+    (setq org-journal-date-prefix "#+TITLE: ")
+    (setq org-journal-date-format "%A, %B %d %Y")
+    )
+#+end_src
+** hel-org
+#+begin_src emacs-lisp :tangle yes
+  (use-package dash)
+  (use-package f)
+  (use-package s)
+  (use-package helm)
+#+end_src
 ** academic reading
 #+begin_src emacs-lisp :tangle yes
   (use-package pdf-tools
@@ -464,6 +505,17 @@
     :config
     (elfeed-org)
     (setq rmh-elfeed-org-files (list "~/Nutstore Files/Nutstore/org/elfeed.org")))
+#+end_src
+** deft
+#+begin_src emacs-lisp :tangle yes
+  (use-package deft
+    :config
+    (setq deft-directory "~/Nutstore Files/Nutstore/org/"
+  	deft-extensions '("md" "txt" "org"))
+    (global-set-key (kbd "C-x C-g") 'deft-find-file)
+    (global-set-key (kbd "C-c d") #'deft)
+    (setq deft-recursive t)
+    )
 #+end_src
 * customization
 #+BEGIN_SRC emacs-lisp :tangle yes

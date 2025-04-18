@@ -1,8 +1,14 @@
-;;;; Emacs Bookmark Format Version 1 ;;;; -*- coding: utf-8-emacs -*-
+;;;; Emacs Bookmark Format Version 1;;;; -*- coding: utf-8-emacs; mode: lisp-data -*-
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("posts"
+(("org-capture-last-stored"
+ (filename . "~/Nutstore Files/Nutstore/org/gtd.org")
+ (front-context-string . "** TODO 配置helm-o")
+ (rear-context-string . "TODO 配置org-mode\n")
+ (position . 28)
+ (last-modified 26626 24724 875688 0))
+("posts"
  (filename . "~/Nutstore Files/Nutstore/codes/github/linqiu15.github.io/_posts/")
  (front-context-string . "2022-04-04-vscod")
  (rear-context-string . "03  5月 28 11:55 ")
