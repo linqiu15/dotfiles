@@ -1,5 +1,11 @@
 * basic
 #+BEGIN_SRC emacs-lisp :tangle yes
+  (setq initial-frame-alist
+        (append initial-frame-alist
+  	      '((right   . 2)
+  		(top    . 8)
+  		(width  . 120)
+  		(height . 40))))
   (menu-bar-mode -1)
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
@@ -10,8 +16,9 @@
   (defalias 'yes-or-no-p 'y-or-n-p)
   (global-display-line-numbers-mode 1)
   (use-package doom-themes
+    :ensure zenburn-theme
     :config
-    (load-theme 'doom-tomorrow-night t))
+    (load-theme 'zenburn t))
 #+END_SRC
 * editors
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -54,7 +61,14 @@
     (global-set-key (kbd "C-x b") 'counsel-switch-buffer)
     (global-set-key (kbd "C-x C-b") 'counsel-bookmark)
     (global-set-key (kbd "C-x C-t") 'counsel-load-theme)
+    (setq ivy-re-builders-alist
+  	'((t . ivy--regex-ignore-order)))
+    (setq ivy-use-virtual-buffers t)
+    (setq ivy-count-format "(%d/%d)")
+    (setq ivy-initial-inputs-alist nil)
     )
+
+  (use-package smex)
 #+END_SRC
 * programming
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -65,6 +79,44 @@
   (use-package flycheck
     :ensure t
     )
+
+  (use-package auto-dictionary
+    :ensure t
+    :config
+    (add-hook 'flyspell-mode-hook (lambda () (auto-dictionary-mode 1))))
+
+  ;; (use-package youdao-dictionary
+  ;;   :ensure t
+  ;;   :config
+  ;;   ;; Enable Cache
+  ;;   (setq url-automatic-caching t)
+  ;;   ;; Example Key binding
+  ;;   (global-set-key (kbd "C-c y") 'youdao-dictionary-search-at-point))
+
+  ;; (use-package osx-dictionary
+  ;;   :ensure t
+  ;;   :config
+  ;;   ;; Support Chinese word
+  ;;   (setq osx-dictionary-use-chinese-text-segmentation t)
+
+  ;;   ;; Key bindings
+  ;;   (global-set-key (kbd "C-c y") 'osx-dictionary-search-word-at-point))
+
+  ;; Default, comment out the providers you don't need.
+  (use-package fanyi
+    :ensure t
+    :custom
+    (fanyi-providers '(;; 海词
+  		     ;; fanyi-haici-provider
+  		     ;; 有道同义词词典
+  		     fanyi-youdao-thesaurus-provider
+  		     ;; Etymonline
+  		     ;; fanyi-etymon-provider
+  		     ;; Longman
+  		     ;; fanyi-longman-provider
+  		     ))
+    :config
+    (global-set-key (kbd "C-c y") 'fanyi-dwim))
 
   (use-package yasnippet
     :config
@@ -236,7 +288,8 @@
   (setq org-directory "/Users/linqiu/Library/Mobile Documents/iCloud~com~appsonthemove~beorg/Documents/org")
   (setq org-default-notes-file (concat org-directory "/notes.org"))
   (setq org-gtd-file (concat org-directory "/gtd.org"))
-  (setq org-agenda-files '("/Users/linqiu/Library/Mobile Documents/iCloud~com~appsonthemove~beorg/Documents/org"))
+  (setq org-agenda-files '("/Users/linqiu/Library/Mobile Documents/iCloud~com~appsonthemove~beorg/Documents/org"
+  			 "~/Nutstore Files/org/journal/"))
 
   (setq org-capture-templates
         '(
@@ -249,9 +302,6 @@
   	 entry (file+headline org-default-notes-file "Links")
   	 "* %^{Title} :NOTE:\n:PROPERTIES:\n:KEYWORDS: %^{Keywords}p\n:END:\n%U\n%a\n\n")
   	))
-#+end_src
-** org-mac-protocol
-#+begin_src emacs-lisp :tangle yes
 #+end_src
 ** org-journal
 #+begin_src emacs-lisp :tangle yes
@@ -275,6 +325,7 @@
   (use-package f)
   (use-package s)
   (use-package helm)
+  (use-package helm-org-rifle)
 #+end_src
 ** academic reading
 #+begin_src emacs-lisp :tangle yes
@@ -282,7 +333,32 @@
     :config
     (pdf-tools-install)  ; Standard activation command
     (pdf-loader-install) ; On demand loading, leads to faster startup time
+    (add-hook 'pdf-view-mode-hook (lambda() (display-line-numbers-mode -1)))
     )
+
+  (use-package zotxt)
+  (use-package org-noter
+    :config
+    (setq org-noter-notes-search-path '("~/Nutstore Files/org/org-notes/"))
+    )
+
+  (use-package org-roam
+    :ensure t
+    :custom
+    (org-roam-directory (file-truename "~/Nutstore Files/org/"))
+    :bind (("C-c n l" . org-roam-buffer-toggle)
+  	 ("C-c n f" . org-roam-node-find)
+  	 ("C-c n g" . org-roam-graph)
+  	 ("C-c n i" . org-roam-node-insert)
+  	 ("C-c n c" . org-roam-capture)
+  	 ;; Dailies
+  	 ("C-c n j" . org-roam-dailies-capture-today))
+    :config
+    ;; If you're using a vertical completion framework, you might want a more informative completion interface
+    (setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
+    (org-roam-db-autosync-mode)
+    ;; If using org-roam-protocol
+    (require 'org-roam-protocol))
 #+end_src
 ** exporting
 #+BEGIN_SRC emacs-lisp :tangle yes

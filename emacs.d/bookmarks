@@ -3,11 +3,11 @@
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
 (("org-capture-last-stored"
- (filename . "~/Library/Mobile Documents/iCloud~com~appsonthemove~beorg/Documents/org/notes.org")
- (front-context-string . "** \n\n  Source: [")
- (rear-context-string)
- (position . 10)
- (last-modified 26629 64977 403519 0))
+ (filename . "~/Library/Mobile Documents/iCloud~com~appsonthemove~beorg/Documents/org/gtd.org")
+ (front-context-string . "* TODO 写一篇记录org-")
+ (rear-context-string . "l URL Capture]]\n")
+ (position . 994)
+ (last-modified 26630 3627 474068 0))
 ("posts"
  (filename . "~/Nutstore Files/Nutstore/codes/github/linqiu15.github.io/_posts/")
  (front-context-string . "2022-04-04-vscod")
