@@ -1,0 +1,29 @@
+
+;; ----- smex-history -----
+(
+ ql/reload-config
+ yas-insert-snippet
+ org-noter
+ revert-buffer
+ org-clock-out
+ org-clock-in
+ flyspell-mode
+)
+
+;; ----- smex-data -----
+(
+ (ql/reload-config . 16)
+ (org-noter . 8)
+ (flyspell-mode . 4)
+ (package-install . 1)
+ (cnfonts-increase-fontsize . 5)
+ (cnfonts-decrease-fontsize . 3)
+ (flyspell-correct-word . 2)
+ (flyspell-correct-word-before-point . 1)
+ (fanyi-dwim . 2)
+ (avy-linum-mode . 1)
+ (org-clock-in . 1)
+ (org-clock-out . 1)
+ (revert-buffer . 4)
+ (yas-insert-snippet . 1)
+)

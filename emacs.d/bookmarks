@@ -4,10 +4,10 @@
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
 (("org-capture-last-stored"
  (filename . "~/Library/Mobile Documents/iCloud~com~appsonthemove~beorg/Documents/org/gtd.org")
- (front-context-string . "* TODO 写一篇记录org-")
- (rear-context-string . "l URL Capture]]\n")
- (position . 994)
- (last-modified 26630 3627 474068 0))
+ (front-context-string . "* TODO 调研机器学习在强子")
+ (rear-context-string . "2025-04-26 Sat>\n")
+ (position . 1169)
+ (last-modified 26633 42076 634829 0))
 ("posts"
  (filename . "~/Nutstore Files/Nutstore/codes/github/linqiu15.github.io/_posts/")
  (front-context-string . "2022-04-04-vscod")
