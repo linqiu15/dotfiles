@@ -19,6 +19,9 @@
     :ensure zenburn-theme
     :config
     (load-theme 'zenburn t))
+  (use-package doom-modeline
+    :ensure t
+    :init (doom-modeline-mode 1))
 #+END_SRC
 * editors
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -33,6 +36,13 @@
   (use-package cnfonts
     :config
     (cnfonts-enable))
+
+  (use-package avy
+    :ensure t
+    :config
+    (global-set-key (kbd "M-a") 'avy-goto-char)
+    (global-set-key (kbd "M-l") 'avy-goto-line)
+    )
 #+END_SRC
 * evil
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -81,6 +91,18 @@
     :ensure t ; only need to install it, embark loads it after consult if found
     :hook
     (embark-collect-mode . consult-preview-at-point-mode))
+
+  (use-package dash)
+  (use-package f)
+  (use-package s)
+  (use-package helm
+    :ensure t
+    :ensure ivy
+    :ensure counsel
+    :config
+    (keymap-global-set "C-s" #'helm-occur)
+    (keymap-global-set "C-x C-f" #'counsel-find-file)
+    )
 #+end_src
 * programming
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -90,6 +112,28 @@
     (corfu-auto t)
     :init
     (global-corfu-mode)
+    )
+
+  ;; Add extensions
+  (use-package cape
+    ;; Bind prefix keymap providing all Cape commands under a mnemonic key.
+    ;; Press C-c p ? to for help.
+    :bind ("C-c p" . cape-prefix-map) ;; Alternative key: M-<tab>, M-p, M-+
+    ;; Alternatively bind Cape commands individually.
+    ;; :bind (("C-c p d" . cape-dabbrev)
+    ;;        ("C-c p h" . cape-history)
+    ;;        ("C-c p f" . cape-file)
+    ;;        ...)
+    :init
+    ;; Add to the global default value of `completion-at-point-functions' which is
+    ;; used by `completion-at-point'.  The order of the functions matters, the
+    ;; first function returning a result wins.  Note that the list of buffer-local
+    ;; completion functions takes precedence over the global list.
+    (add-hook 'completion-at-point-functions #'cape-dabbrev)
+    (add-hook 'completion-at-point-functions #'cape-file)
+    (add-hook 'completion-at-point-functions #'cape-elisp-block)
+    ;; (add-hook 'completion-at-point-functions #'cape-history)
+    ;; ...
     )
 
   (use-package flycheck
@@ -116,6 +160,11 @@
   		     ))
     :config
     (global-set-key (kbd "C-c y") 'fanyi-dwim))
+
+  (use-package jinx
+    :config
+    (dolist (hook '(text-mode-hook org-mode-hook prog-mode-hook conf-mode-hook))
+      (add-hook hook #'jinx-mode)))
 
   (use-package yasnippet
     :config
@@ -288,7 +337,8 @@
   (setq org-default-notes-file (concat org-directory "/notes.org"))
   (setq org-gtd-file (concat org-directory "/gtd.org"))
   (setq org-agenda-files '("/Users/linqiu/Library/Mobile Documents/iCloud~com~appsonthemove~beorg/Documents/org"
-  			 "~/Nutstore Files/org/journal/"))
+  			 "~/Nutstore Files/org/journal/"
+  			 ))
 
   (setq org-capture-templates
         '(
@@ -320,10 +370,6 @@
 #+end_src
 ** hel-org
 #+begin_src emacs-lisp :tangle yes
-  (use-package dash)
-  (use-package f)
-  (use-package s)
-  (use-package helm)
   (use-package helm-org-rifle)
 #+end_src
 ** academic reading
@@ -358,6 +404,20 @@
     (org-roam-db-autosync-mode)
     ;; If using org-roam-protocol
     (require 'org-roam-protocol))
+
+  (use-package citar
+    :ensure t
+    :custom
+    (org-cite-global-bibliography
+     '("~/Nutstore Files/Nutstore/Documents/myrefs.bib"))
+    (org-cite-insert-processor 'citar)
+    (org-cite-follow-processor 'citar)
+    (org-cite-activate-processor 'citar)
+    (citar-bibliography org-cite-global-bibliography)
+    :hook
+    (LaTeX-mode . citar-capf-setup)
+    (org-mode . citar-capf-setup)
+    )
 #+end_src
 ** exporting
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -396,6 +456,7 @@
     :config
     (add-to-list 'evil-emacs-state-modes 'elfeed-search-mode)
     (add-to-list 'evil-emacs-state-modes 'elfeed-show-mode)
+    (setq-default elfeed-search-filter "@1-week-ago +unread ")
     )
   (use-package elfeed-goodies
     :config
