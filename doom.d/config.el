@@ -78,3 +78,4 @@
 (use-package! cnfonts
   :config
   (cnfonts-enable))
+(setq rmh-elfeed-org-files '("/Users/linqiu/Nutstore Files/org/elfeed.org"))
