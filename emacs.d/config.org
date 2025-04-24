@@ -45,49 +45,52 @@
      :config
      (evil-commentary-mode))
 #+END_SRC
-* ivy
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package ivy
-    :ensure swiper
-    :ensure counsel
-    :config
-    (ivy-mode 1)
-    (setq ivy-use-virtual-buffers t)
-    (setq enable-recursive-minibuffers t)
-    (global-set-key "\C-s" 'swiper)
-    (global-set-key (kbd "M-x") 'counsel-M-x)
-    (global-set-key (kbd "C-x C-f") 'counsel-find-file)
-    (global-set-key (kbd "C-x C-r") 'counsel-recentf)
-    (global-set-key (kbd "C-x b") 'counsel-switch-buffer)
-    (global-set-key (kbd "C-x C-b") 'counsel-bookmark)
-    (global-set-key (kbd "C-x C-t") 'counsel-load-theme)
-    (setq ivy-re-builders-alist
-  	'((t . ivy--regex-ignore-order)))
-    (setq ivy-use-virtual-buffers t)
-    (setq ivy-count-format "(%d/%d)")
-    (setq ivy-initial-inputs-alist nil)
-    )
-
-  (use-package smex)
-#+END_SRC
 * completion systems
 #+begin_src emacs-lisp :tangle yes
-  ;; Enable Vertico.
   (use-package vertico
     :ensure t
-    ;; :custom
-    ;; (vertico-scroll-margin 0) ;; Different scroll margin
-    ;; (vertico-count 20) ;; Show more candidates
-    ;; (vertico-resize t) ;; Grow and shrink the Vertico minibuffer
-    ;; (vertico-cycle t) ;; Enable cycling for `vertico-next/previous'
     :init
     (vertico-mode))
+  (use-package savehist
+    :ensure t
+    :init
+    (savehist-mode))
+
+  (use-package orderless
+    :ensure t
+    :custom
+    (completion-styles '(orderless basic))
+    (completion-category-defaults nil)
+    (completion-category-overrides '((file (styles partial-completion)))))
+
+  (use-package marginalia
+    :ensure t
+    :config (marginalia-mode))
+  (use-package consult
+    :ensure t
+    :bind (("C-x b" . consult-buffer)
+  	 ("M-s l" . consult-line)
+  	 ("M-s i" . consult-imenu)
+  	 )
+    :config
+    (recentf-mode)
+    )
+  (use-package embark
+    :ensure t)
+  (use-package embark-consult
+    :ensure t ; only need to install it, embark loads it after consult if found
+    :hook
+    (embark-collect-mode . consult-preview-at-point-mode))
 #+end_src
 * programming
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package company
-    :config
-    (global-company-mode t))
+  (use-package corfu
+    :ensure t
+    :custom
+    (corfu-auto t)
+    :init
+    (global-corfu-mode)
+    )
 
   (use-package flycheck
     :ensure t
@@ -97,23 +100,6 @@
     :ensure t
     :config
     (add-hook 'flyspell-mode-hook (lambda () (auto-dictionary-mode 1))))
-
-  ;; (use-package youdao-dictionary
-  ;;   :ensure t
-  ;;   :config
-  ;;   ;; Enable Cache
-  ;;   (setq url-automatic-caching t)
-  ;;   ;; Example Key binding
-  ;;   (global-set-key (kbd "C-c y") 'youdao-dictionary-search-at-point))
-
-  ;; (use-package osx-dictionary
-  ;;   :ensure t
-  ;;   :config
-  ;;   ;; Support Chinese word
-  ;;   (setq osx-dictionary-use-chinese-text-segmentation t)
-
-  ;;   ;; Key bindings
-  ;;   (global-set-key (kbd "C-c y") 'osx-dictionary-search-word-at-point))
 
   ;; Default, comment out the providers you don't need.
   (use-package fanyi
@@ -177,15 +163,15 @@
      '(shell-pop-cleanup-buffer-at-process-exit t)))
 
 
-    (use-package lsp-mode
-      :init
-      (setq lsp-prefer-flymake nil)
-      (setq lsp-keymap-prefix "C-c l")
-      :config
-      (add-hook 'julia-mode-hook #'lsp-mode))
-    (use-package lsp-ui :commands lsp-ui-mode)
-    ;; if you are ivy user
-    (use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
+  (use-package lsp-mode
+    :init
+    (setq lsp-prefer-flymake nil)
+    (setq lsp-keymap-prefix "C-c l")
+    :config
+    (add-hook 'julia-mode-hook #'lsp-mode))
+  (use-package lsp-ui :commands lsp-ui-mode)
+  ;; if you are ivy user
+  (use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
 #+END_SRC
 * lang
 ** c++
