@@ -333,6 +333,12 @@
   (global-set-key (kbd "C-c l") #'org-store-link)
   (global-set-key (kbd "C-c a") #'org-agenda)
   (global-set-key (kbd "C-c c") #'org-capture)
+
+  (global-set-key (kbd "C-c o i") #'org-clock-in)
+  (global-set-key (kbd "C-c o o") #'org-clock-out)
+  (global-set-key (kbd "C-c o g") #'org-clock-goto)
+  (global-set-key (kbd "C-c o c") #'org-clock-cancel)
+  (global-set-key (kbd "C-c o l") #'org-clock-in-last)
   (setq org-directory "/Users/linqiu/Library/Mobile Documents/iCloud~com~appsonthemove~beorg/Documents/org")
   (setq org-default-notes-file (concat org-directory "/notes.org"))
   (setq org-gtd-file (concat org-directory "/gtd.org"))
@@ -344,6 +350,10 @@
         '(
   	("t" "Todo" entry (file org-gtd-file)
   	 "* TODO %?\n  %i")
+  	("r" "Reading")
+  	("ra" "Arxiv reading" entry (file+olp+datetree "~/Nutstore Files/org/org-notes/arxiv_reading.org")
+  	 "* %? %^g\n%U")
+
   	("wt" "org-protocol-task"
   	 entry (file org-gtd-file)
   	 "* TODO %a\n  %i")
@@ -449,6 +459,16 @@
   (use-package org-re-reveal
     :config
     (setq org-re-reveal-root "file:///Users/qiulin/.emacs.d/misc/reveal.js"))
+
+  (use-package org-download
+    :ensure t
+    :config
+    (setq org-download-screenshot-method "screencapture -i %s")
+    (setq org-download-heading-lvl nil)
+    (setq-default org-download-image-dir "~/Nutstore Files/org/org-notes/images/")
+    ;; Drag-and-drop to `dired`
+    (add-hook 'dired-mode-hook 'org-download-enable)
+    )
 #+END_SRC
 * Apps
 ** elfeed
@@ -476,6 +496,7 @@
     :config
     (setq deft-directory "~/Nutstore Files/org/"
   	deft-extensions '("md" "txt" "org"))
+    (setq deft-default-extension "org")
     (global-set-key (kbd "C-x C-g") 'deft-find-file)
     (global-set-key (kbd "C-c d") #'deft)
     (setq deft-recursive t)
