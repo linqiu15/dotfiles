@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: notesmeta
+# key: nometa_
+# --
+#+title: ${1:title}
+#+date: ${2:date}
+#+email: qiulin@ihep.ac.cn
+#+author: Lin Qiu
+#+latex_header: \usepackage{ctex}
+#+latex_header: \usepackage{hyperref}
+#+latex_header: \hypersetup{colorlinks,citecolor=black,filecolor=black,linkcolor=black,urlcolor=black}
+#+latex_header: \usepackage[margin=0.5in]{geometry}
