@@ -43,6 +43,19 @@
     (global-set-key (kbd "M-a") 'avy-goto-char)
     (global-set-key (kbd "M-l") 'avy-goto-line)
     )
+
+  (use-package mini-frame
+    :ensure t)
+
+  (use-package multiple-cursors
+    :ensure t
+    :config
+    (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+    )
+
+  (use-package ace-mc
+    :ensure t
+    )
 #+END_SRC
 * evil
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -493,6 +506,15 @@
     :config
     (elfeed-org)
     (setq rmh-elfeed-org-files (list "~/Nutstore Files/org/elfeed.org")))
+
+  (defun elfeed-mark-all-as-read ()
+    (interactive)
+    (mark-whole-buffer)
+    (elfeed-search-untag-all-unread))
+
+  (use-package webfeeder
+    :ensure t
+    )
 #+end_src
 ** deft
 #+begin_src emacs-lisp :tangle yes
