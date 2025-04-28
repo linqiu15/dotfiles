@@ -326,6 +326,7 @@
   (unless (server-running-p)
     (server-start))
   (require 'org-protocol)
+  (require 'org-archive)
 
   (use-package org-superstar
     :config
@@ -356,7 +357,7 @@
   (setq org-default-notes-file (concat org-directory "/notes.org"))
   (setq org-gtd-file (concat org-directory "/gtd.org"))
   (setq org-agenda-files '("/Users/linqiu/Library/Mobile Documents/iCloud~com~appsonthemove~beorg/Documents/org"
-  			 "~/Nutstore Files/org/journal/"
+  			 "~/Nutstore Files/org/daily"
   			 ))
 
   (setq org-capture-templates
@@ -377,19 +378,19 @@
 #+end_src
 ** org-journal
 #+begin_src emacs-lisp :tangle yes
-  (use-package org-journal
-    :ensure t
-    :defer t
-    :init
-    ;; Change default prefix key; needs to be set before loading org-journal
-    ;; (setq org-journal-prefix-key "C-c j ")
-    (global-set-key (kbd "C-c j") #'org-journal-new-entry)
-    :config
-    (setq org-journal-dir "~/Nutstore Files/org/journal/")
-    (setq org-journal-file-format "%Y-%m-%d.org")
-    (setq org-journal-date-prefix "#+TITLE: ")
-    (setq org-journal-date-format "%A, %B %d %Y")
-    )
+  ;; (use-package org-journal
+  ;;   :ensure t
+  ;;   :defer t
+  ;;   :init
+  ;;   ;; Change default prefix key; needs to be set before loading org-journal
+  ;;   ;; (setq org-journal-prefix-key "C-c j ")
+  ;;   (global-set-key (kbd "C-c j") #'org-journal-new-entry)
+  ;;   :config
+  ;;   (setq org-journal-dir "~/Nutstore Files/org/journal/")
+  ;;   (setq org-journal-file-format "%Y-%m-%d.org")
+  ;;   (setq org-journal-date-prefix "#+TITLE: ")
+  ;;   (setq org-journal-date-format "%A, %B %d %Y")
+  ;;   )
 #+end_src
 ** hel-org
 #+begin_src emacs-lisp :tangle yes
@@ -428,6 +429,18 @@
     (org-roam-db-autosync-mode)
     ;; If using org-roam-protocol
     (require 'org-roam-protocol))
+  (use-package org-roam-ui
+    :ensure t
+    :after org-roam ;; or :after org
+    ;;         normally we'd recommend hooking orui after org-roam, but since org-roam does not have
+    ;;         a hookable mode anymore, you're advised to pick something yourself
+    ;;         if you don't care about startup time, use
+    ;;  :hook (after-init . org-roam-ui-mode)
+    :config
+    (setq org-roam-ui-sync-theme t
+  	org-roam-ui-follow t
+  	org-roam-ui-update-on-save t
+  	org-roam-ui-open-on-start t))
 
   (use-package citar
     :ensure t
@@ -505,7 +518,7 @@
     :ensure t
     :config
     (elfeed-org)
-    (setq rmh-elfeed-org-files (list "~/Nutstore Files/org/elfeed.org")))
+    (setq rmh-elfeed-org-files (list "~/Nutstore Files/org/20250428222322-elfeed.org")))
 
   (defun elfeed-mark-all-as-read ()
     (interactive)
