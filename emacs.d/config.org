@@ -18,10 +18,21 @@
   (use-package doom-themes
     :ensure zenburn-theme
     :config
-    (load-theme 'zenburn t))
+    (load-theme 'leuven t))
   (use-package doom-modeline
     :ensure t
     :init (doom-modeline-mode 1))
+
+  (use-package helpful
+    :ensure t
+    :config
+    (global-set-key (kbd "C-h f") #'helpful-callable)
+
+    (global-set-key (kbd "C-h v") #'helpful-variable)
+    (global-set-key (kbd "C-h k") #'helpful-key)
+    (global-set-key (kbd "C-h x") #'helpful-command)
+    (global-set-key (kbd "C-c C-d") #'helpful-at-point)
+    )
 #+END_SRC
 * editors
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -341,6 +352,13 @@
    'org-babel-load-languages
    '((emacs-lisp . nil)
      (python . t)))
+  (use-package org-latex-impatient
+    :defer t
+    :hook (org-mode . org-latex-impatient-mode)
+    :init
+    (setq org-latex-impatient-tex2svg-bin
+          ;; location of tex2svg executable
+          "~/node_modules/mathjax-node-cli/bin/tex2svg"))
 #+END_SRC
 ** GTD
 #+begin_src emacs-lisp :tangle yes
@@ -358,7 +376,14 @@
   (setq org-gtd-file (concat org-directory "/gtd.org"))
   (setq org-agenda-files '("/Users/linqiu/Library/Mobile Documents/iCloud~com~appsonthemove~beorg/Documents/org"
   			 "~/Nutstore Files/org/daily"
+  			 "~/Nutstore Files/org/"
   			 ))
+
+  (defun zp/org-protocol-insert-selection-dwim (selection)
+    "Insert SELECTION as an org blockquote."
+    (unless (string= selection "")
+      ;;(format "#+begin_quote\n%s\n#+end_quote" selection)
+      (format "\n%s\n" selection)))
 
   (setq org-capture-templates
         '(
@@ -370,27 +395,50 @@
   	 "* %? %^g\n%U")
   	("wt" "org-protocol-task"
   	 entry (file org-gtd-file)
-  	 "* TODO %a\n%i")
+  	 "* TODO %?\n%a")
   	("wn" "org-protocol-notes"
   	 entry (file+headline org-default-notes-file "Links")
   	 "* %^{Title} :NOTE:\n:PROPERTIES:\n:KEYWORDS: %^{Keywords}p\n:END:\n%U\n%a\n\n")
+  	("r" "ref" plain "* %U\n
+  %(zp/org-protocol-insert-selection-dwim \"%i\")%?"
+  	 :target (file+head "web/${slug}.org"
+  			    "#+title: ${title}\n
+  ,#+roam_key: ${ref}\n
+  ,#+created: %u\n"
+  			    )
+  	 :unnarrowed t)
   	))
+
+
+  (setq org-refile-targets '((nil :maxlevel . 9)
+                                  (org-agenda-files :maxlevel . 9)))
+  (setq org-outline-path-complete-in-steps nil)         ; Refile in a single go
+  (setq org-refile-use-outline-path t)                  ; Show full paths for refiling
+
+  ;; Function to archive DONE tasks.  No longer really needed as I will capture to OrgRoam Dailies
+  (defun org-archive-done-tasks ()
+    (interactive)
+    (org-map-entries
+     (lambda ()
+       (org-archive-subtree)
+       (setq org-map-continue-from (org-element-property :begin (org-element-at-point))))
+     "/DONE" 'file))
 #+end_src
 ** org-journal
 #+begin_src emacs-lisp :tangle yes
-  ;; (use-package org-journal
-  ;;   :ensure t
-  ;;   :defer t
-  ;;   :init
-  ;;   ;; Change default prefix key; needs to be set before loading org-journal
-  ;;   ;; (setq org-journal-prefix-key "C-c j ")
-  ;;   (global-set-key (kbd "C-c j") #'org-journal-new-entry)
-  ;;   :config
-  ;;   (setq org-journal-dir "~/Nutstore Files/org/journal/")
-  ;;   (setq org-journal-file-format "%Y-%m-%d.org")
-  ;;   (setq org-journal-date-prefix "#+TITLE: ")
-  ;;   (setq org-journal-date-format "%A, %B %d %Y")
-  ;;   )
+  (use-package org-journal
+    :ensure t
+    :defer t
+    :init
+    ;; Change default prefix key; needs to be set before loading org-journal
+    ;; (setq org-journal-prefix-key "C-c j ")
+    (global-set-key (kbd "C-c j") #'org-journal-new-entry)
+    :config
+    (setq org-journal-dir "~/Nutstore Files/org/daily")
+    (setq org-journal-file-format "%Y-%m-%d.org")
+    (setq org-journal-date-prefix "#+TITLE: ")
+    (setq org-journal-date-format "%A, %B %d %Y")
+    )
 #+end_src
 ** hel-org
 #+begin_src emacs-lisp :tangle yes
@@ -405,10 +453,16 @@
     (add-hook 'pdf-view-mode-hook (lambda() (display-line-numbers-mode -1)))
     )
 
-  (use-package zotxt)
-  (use-package org-noter
+  (use-package zotxt
     :config
+     (setq org-zotxt-link-description-style :title))
+  (use-package org-noter
+    :ensure djvu
+    :ensure nov
+    :config
+    (setq org-noter-set-hide-other t)
     (setq org-noter-set-auto-save-last-location t)
+    ;; (setq org-noter-notes-window-location 'other-frame)
     (setq org-noter-notes-search-path '("~/Nutstore Files/org/org-notes/"))
     )
 
@@ -424,6 +478,12 @@
   	 ;; Dailies
   	 ("C-c n j" . org-roam-dailies-capture-today))
     :config
+    (setq org-roam-completion-everywhere t)
+    (setq org-roam-dailies-capture-templates
+  	'(("d" "default" entry
+  	   "* %U  %?"
+  	   :target (file+head "%<%Y-%m-%d>.org"
+  			      "#+title: %<%Y-%m-%d>\n"))))
     ;; If you're using a vertical completion framework, you might want a more informative completion interface
     (setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
     (org-roam-db-autosync-mode)
@@ -446,7 +506,7 @@
     :ensure t
     :custom
     (org-cite-global-bibliography
-     '("~/Nutstore Files/Nutstore/Documents/myrefs.bib"))
+     '("~/Nutstore Files/Nutstore/Documents/refs/myrefs.bib"))
     (org-cite-insert-processor 'citar)
     (org-cite-follow-processor 'citar)
     (org-cite-activate-processor 'citar)
@@ -454,33 +514,32 @@
     :hook
     (LaTeX-mode . citar-capf-setup)
     (org-mode . citar-capf-setup)
+    :config
+    ;; (setq citar-at-point-function 'embark-act)
+    (setq citar-open-entry-function 'citar-open-entry-in-zotero)
+    (define-key org-mode-map (kbd "C-c ]") 'citar-insert-citation)
     )
+
+
+  (use-package citar-org-roam
+    :after (citar org-roam)
+    :config (citar-org-roam-mode))
+
+
+  (setq org-latex-pdf-process
+        '("xelatex -interaction nonstopmode -output-directory %o %f"
+  	"bibtex %b"
+  	"xelatex -interaction nonstopmode -output-directory %o %f"
+  	"xelatex -interaction nonstopmode -output-directory %o %f"))
 #+end_src
 ** exporting
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package org-ref
-    :config
-    (setq org-latex-pdf-process
-          '("xelatex -shell-escape -interaction nonstopmode %f"
-            "xelatex -shell-escape -interaction nonstopmode %f")) ;; for multiple passes
-    ;; (setq org-latex-pdf-process
-    ;;       '("xelatex -interaction nonstopmode -output-directory %o %f"
-    ;;         "bibtex %b"
-    ;;         "xelatex -interaction nonstopmode -output-directory %o %f"
-    ;;         "xelatex -interaction nonstopmode -output-directory %o %f"))
-
-    ;; (setq org-latex-listings 'minted
-    ;;       org-latex-packages-alist '(("" "minted")))
-
-    ;; (setq org-latex-pdf-process
-    ;;       '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-    ;;         "bibtex %b"
-    ;;         "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-    ;;         "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
-    (define-key org-mode-map (kbd "C-c ]") 'org-ref-insert-link)
-    )
-
   (setq org-pandoc-options-for-latex-pdf '((pdf-engine . "xelatex")))
+
+  ;; HTML export settings
+  (setq org-html-validation-link nil)
+  (setq org-html-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"https://gongzhitaao.org/orgcss/org.css\" />")
+  ;; (setq org-html-head-include-default-style nil)
 #+END_SRC
 ** misc
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -508,7 +567,7 @@
     :config
     (add-to-list 'evil-emacs-state-modes 'elfeed-search-mode)
     (add-to-list 'evil-emacs-state-modes 'elfeed-show-mode)
-    (setq-default elfeed-search-filter "@1-month-ago +unread ")
+    (setq-default elfeed-search-filter "@1-day-ago +unread ")
     )
   (use-package elfeed-goodies
     :config
@@ -521,7 +580,7 @@
     (setq rmh-elfeed-org-files (list "~/Nutstore Files/org/20250428222322-elfeed.org")))
 
   (defun elfeed-mark-all-as-read ()
-    (interactive)
+   (interactive)
     (mark-whole-buffer)
     (elfeed-search-untag-all-unread))
 

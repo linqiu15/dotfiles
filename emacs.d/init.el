@@ -9,7 +9,6 @@
 (add-to-list 'package-archives
 	     '("gnu-cn" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu"))
 
-
 (package-initialize)
 
 ;; Bootstrap `use-package'
