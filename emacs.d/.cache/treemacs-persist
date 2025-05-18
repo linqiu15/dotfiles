@@ -1,0 +1,18 @@
+* Default
+** model-zoo
+ - path :: ~/Documents/github/model-zoo
+* No Perspective
+** dotfiles
+ - path :: ~/Nutstore Files/Nutstore/codes/github/dotfiles
+* Tab config.org
+** dotfiles
+ - path :: ~/Nutstore Files/Nutstore/codes/github/dotfiles
+* Tab *scratch*
+** linqiu
+ - path :: ~
+* Tab basic.jl
+** LearningML
+ - path :: ~/Nutstore Files/Nutstore/codes/github/LearningML
+* Tab main.jl
+** Lux.jl
+ - path :: ~/Documents/github/Lux.jl
