@@ -2,10 +2,10 @@
 #+BEGIN_SRC emacs-lisp :tangle yes
   (setq initial-frame-alist
         (append initial-frame-alist
-  	      '((right   . 2)
-  		(top    . 8)
-  		(width  . 120)
-  		(height . 40))))
+              '((right   . 2)
+                (top    . 8)
+                (width  . 120)
+                (height . 40))))
   (menu-bar-mode -1)
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
@@ -19,7 +19,7 @@
   (use-package doom-themes
     :ensure zenburn-theme
     :config
-    (load-theme 'doom-xcode t))
+    (load-theme 'doom-zenburn t))
   (use-package doom-modeline
     :ensure t
     :init (doom-modeline-mode 1))
