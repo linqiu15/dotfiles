@@ -619,6 +619,23 @@
     (setq deft-recursive t)
     )
 #+end_src
+* typst
+#+begin_src emacs-lisp :tangle yes
+  (use-package typst-ts-mode
+    :ensure t
+    :custom
+    ;; (typst-ts-watch-options "--open")
+    (typst-ts-mode-grammar-location (expand-file-name "tree-sitter/libtree-sitter-typst.dylib" user-emacs-directory))
+    (typst-ts-mode-enable-raw-blocks-highlight t)
+    :config
+    (keymap-set typst-ts-mode-map "C-c C-c" #'typst-ts-tmenu) 
+    )
+
+  (use-package outline-indent
+    :ensure t
+    )
+#+end_src
+
 * TODO treemacs
 #+begin_src emacs-lisp :tangle yes
   (use-package treemacs
