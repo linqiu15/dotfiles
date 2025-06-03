@@ -208,6 +208,7 @@
     (global-highlight-parentheses-mode t))
 
   (use-package magit)
+  ;; (setq-default with-editor-emacsclient-executable "emacsclient")
 
   (use-package hungry-delete
     :config
