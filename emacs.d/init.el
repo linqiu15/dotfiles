@@ -1,5 +1,6 @@
 (require 'package)
 ;;(setq package-enable-at-startup nil)
+(setq package-install-upgrade-built-in t)
 (add-to-list 'package-archives
 	     '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 (add-to-list 'package-archives
