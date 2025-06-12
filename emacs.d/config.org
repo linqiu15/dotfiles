@@ -370,6 +370,13 @@
     :config
     (add-hook 'org-mode-hook #'org-bars-mode)
     )
+
+  (use-package iscroll
+    :load-path "~/.emacs.d/site-lisp/iscroll/"
+    :config
+    (add-hook 'org-mode-hook #'iscroll-mode)
+    )
+  (setq org-startup-with-inline-images t)
 #+END_SRC
 ** GTD
 #+begin_src emacs-lisp :tangle yes
