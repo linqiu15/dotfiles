@@ -371,11 +371,22 @@
     (add-hook 'org-mode-hook #'org-bars-mode)
     )
 
-  (use-package iscroll
-    :load-path "~/.emacs.d/site-lisp/iscroll/"
-    :config
-    (add-hook 'org-mode-hook #'iscroll-mode)
-    )
+  ;; (use-package iscroll
+  ;;   :load-path "~/.emacs.d/site-lisp/iscroll/"
+  ;;   :config
+  ;;   (add-hook 'org-mode-hook #'iscroll-mode)
+  ;;   )
+  ;;; Scrolling.
+  ;; Good speed and allow scrolling through large images (pixel-scroll).
+  ;; Note: Scroll lags when point must be moved but increasing the number
+  ;;       of lines that point moves in pixel-scroll.el ruins large image
+  ;;       scrolling. So unfortunately I think we'll just have to live with
+  ;;       this.
+  (pixel-scroll-mode)
+  (setq pixel-dead-time 0) ; Never go back to the old scrolling behaviour.
+  (setq pixel-resolution-fine-flag t) ; Scroll by number of pixels instead of lines (t = frame-char-height pixels).
+  (setq mouse-wheel-scroll-amount '(1)) ; Distance in pixel-resolution to scroll each mouse wheel event.
+  (setq mouse-wheel-progressive-speed nil) ; Progressive speed is too fast for me.
   (setq org-startup-with-inline-images t)
 #+END_SRC
 ** GTD
@@ -626,6 +637,7 @@
     (setq org-download-heading-lvl nil)
     (setq-default org-download-image-dir "~/Nutstore Files/org/org-notes/images/")
     ;; Drag-and-drop to `dired`
+    (setq org-download-heading-lvl nil)
     (add-hook 'dired-mode-hook 'org-download-enable)
     )
 #+END_SRC
@@ -763,7 +775,7 @@
     )
 #+end_src
 
-* TODO treemacs
+* treemacs
 #+begin_src emacs-lisp :tangle yes
   (use-package treemacs
     :ensure t
@@ -890,6 +902,16 @@
     (global-set-key (kbd "C-c n n") #'neotree-toggle)
     (global-set-key (kbd "C-c n r") #'neotree-refresh)
     )
+#+end_src
+* AI
+#+begin_src emacs-lisp :tangle yes
+  ;; Install Khoj client from MELPA Stable
+  (use-package khoj
+    :ensure t
+    :pin melpa-stable
+    :bind ("C-c k" . 'khoj)
+    :config (setq khoj-api-key "kk-ribpOx_LfkFwo5fzGdZeWWRz-UsGMPbp-Zdy1rscEbg"
+  		khoj-server-url "https://app.khoj.dev"))
 #+end_src
 * customization
 #+BEGIN_SRC emacs-lisp :tangle yes
