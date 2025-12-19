@@ -2,22 +2,10 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("HepTools"
- (filename . "~/.julia/dev/HepTools/.gitignore")
+(("org-capture-last-stored"
+ (filename . "~/Nutstore Files/org/20251216095601-torch.org")
  (front-context-string)
- (rear-context-string)
- (position . 1)
- (last-modified 26665 35885 621169 0))
-("org-refile-last-stored"
- (filename . "~/Library/Mobile Documents/iCloud~com~appsonthemove~beorg/Documents/org/refile.org")
- (front-context-string . "** DONE 配置helm-o")
- (rear-context-string . "完成Research plan\n")
- (position . 147)
- (last-modified 26652 2889 477490 0))
-("org-capture-last-stored"
- (filename . "~/Nutstore Files/org/notes.org")
- (front-context-string . "** Develop Julia")
- (rear-context-string . "rial in Julia]]\n")
- (position . 3673)
- (last-modified 26665 36083 948378 0))
+ (rear-context-string . "+title: PyTorch\n")
+ (position . 85)
+ (last-modified 26945 29450 929985 0))
 )

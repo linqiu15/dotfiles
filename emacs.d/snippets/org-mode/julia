@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: julia
+# key: ju_
+# --
+#+begin_src julia
+$0
+#+end_src

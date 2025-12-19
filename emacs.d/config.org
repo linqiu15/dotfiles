@@ -1,3 +1,5 @@
+#+begin_src emacs-lisp :tangle yes
+#+end_src
 * basic
 #+BEGIN_SRC emacs-lisp :tangle yes
   (setq mac-option-modifier 'meta) ; set alt-key to meta
@@ -7,10 +9,11 @@
                 (top    . 8)
                 (width  . 120)
                 (height . 40))))
+  ;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
   (menu-bar-mode -1)
   (tool-bar-mode -1)
-  ;;(scroll-bar-mode -1)
-  (tab-bar-mode 1)
+  (scroll-bar-mode -1)
+  ;; (tab-bar-mode 1)
   (setq delete-by-moving-to-trash t)
   (setq inhibit-startup-message t)
   (setq inhibit-startup-screen t)
@@ -21,7 +24,7 @@
   (use-package doom-themes
     :ensure zenburn-theme
     :config
-    (load-theme 'doom-zenburn t))
+    (load-theme 'sanityinc-tomorrow-night t))
   (use-package doom-modeline
     :ensure t
     :init (doom-modeline-mode 1))
@@ -107,6 +110,7 @@
     :ensure t
     :bind (("C-x b" . consult-buffer)
   	 ("C-x C-b" . consult-bookmark)
+  	 ("C-x r" . consult-recent-file)
   	 ("M-s l" . consult-line)
   	 ("M-s i" . consult-imenu)
   	 )
@@ -160,8 +164,12 @@
     (add-hook 'completion-at-point-functions #'cape-dabbrev)
     (add-hook 'completion-at-point-functions #'cape-file)
     (add-hook 'completion-at-point-functions #'cape-elisp-block)
-    ;; (add-hook 'completion-at-point-functions #'cape-history)
-    ;; ...
+    (add-hook 'completion-at-point-functions #'cape-history)
+    :config
+    (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster)
+    ;; Option 1: Specify explicitly to use Orderless for Eglot
+    (setq completion-category-overrides '((eglot (styles orderless))
+  					(eglot-capf (styles orderless))))
     )
 
   (use-package flycheck
@@ -189,10 +197,10 @@
     :config
     (global-set-key (kbd "C-c y") 'fanyi-dwim))
 
-  (use-package jinx
-    :config
-    (dolist (hook '(text-mode-hook org-mode-hook prog-mode-hook conf-mode-hook))
-      (add-hook hook #'jinx-mode)))
+  ;; (use-package jinx
+  ;;   :config
+  ;;   (dolist (hook '(text-mode-hook org-mode-hook prog-mode-hook conf-mode-hook))
+  ;;     (add-hook hook #'jinx-mode)))
 
   (use-package yasnippet
     :config
@@ -242,16 +250,41 @@
 
 
   (use-package lsp-mode
+    :custom
+    (lsp-completion-provider :none) ;; we use Corfu!
     :init
-    (setq lsp-prefer-flymake nil)
+    ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
     (setq lsp-keymap-prefix "C-c l")
+    (defun my/lsp-mode-setup-completion ()
+      (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+  	  '(orderless))) ;; Configure orderless 
+    :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
+           (XXX-mode . lsp)
+           ;; if you want which-key integration
+           (lsp-mode . lsp-enable-which-key-integration)
+  	 (lsp-completion-mode . my/lsp-mode-setup-completion))
+    :commands lsp
     :config
-    (add-hook 'julia-mode-hook #'lsp-mode))
+    (setq gc-cons-threshold 100000000)
+    (setq read-process-output-max (* 1024 1024))
+    (setq lsp-restart 'auto-restart)
+    (setq lsp-log-io nil) ; if set to true can cause a performance hit
+
+    )
+  ;; optionally
   (use-package lsp-ui :commands lsp-ui-mode)
-  ;; if you are ivy user
-  (use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
 #+END_SRC
 * lang
+** debugging
+#+begin_src emacs-lisp :tangle yes
+  (use-package dap-mode
+    :config
+    ;; Enabling only some features
+    (setq dap-auto-configure-features '(sessions locals controls tooltip))
+    (require 'dap-python)
+    (setq dap-python-debugger 'debugpy)
+    )
+#+end_src
 ** c++
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package irony
@@ -270,17 +303,19 @@
 #+END_SRC
 ** python
 #+BEGIN_SRC emacs-lisp :tangle yes
+  (setq
+   python-shell-interpreter "~/python314/bin/python3"
+   python-shell-interpreter-args " -i"
+   python-shell-completion-native-enable nil)
+  ;; (add-hook 'python-mode 'flycheck-mode)
   (use-package elpy
     :ensure t
     :defer t
     :init
     (advice-add 'python-mode :before 'elpy-enable)
     :config
-    (add-hook 'python-mode 'flycheck-mode)
-    (setq python-shell-interpreter "python3"
-          python-shell-interpreter-args "-i")
-    (setq elpy-rpc-python-command "python3"))
-
+    (setq elpy-rpc-python-command "python3")
+    )
 
   (use-package yapfify
     :config
@@ -316,7 +351,7 @@
 
   (use-package lsp-julia
     :config
-    (setq lsp-julia-default-environment "~/.julia/environments/v1.11/"))
+    (setq lsp-julia-default-environment "~/.julia/environments/v1.12/"))
 #+END_SRC
 ** misc
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -391,6 +426,13 @@
 #+END_SRC
 ** GTD
 #+begin_src emacs-lisp :tangle yes
+  (add-to-list 'org-modules 'org-mac-iCal)
+  (setq org-agenda-include-diary t)
+  (setq org-agenda-custom-commands
+        '(("I" "Import diary from iCal" agenda ""
+           ((org-agenda-mode-hook
+             (lambda ()
+               (org-mac-iCal)))))))
   (setq org-log-into-drawer "LOGBOOK")
 
   (global-set-key (kbd "C-c l") #'org-store-link)
@@ -422,13 +464,15 @@
         '(
   	("t" "Todo" entry (file org-gtd-file)
   	 "* TODO %?\n%i")
+  	("e" "emacs task" entry (file org-gtd-file)
+  	 "* TODO %?\n%a")
   	("i" "Inbox" entry (file+headline org-default-notes-file "Inbox")
   	 "* %?\n%U")
   	("a" "Arxiv reading" entry (file+olp+datetree "~/Nutstore Files/org/org-notes/arxiv_reading.org")
   	 "* %? %^g\n%U")
   	("wt" "org-protocol-task"
   	 entry (file org-gtd-file)
-  	 "* TODO %?\n%a")
+  	 "* TODO %a\n%?")
   	("wn" "org-protocol-notes"
   	 entry (file+headline org-default-notes-file "Links")
   	 "* %^{Title} :NOTE:\n:PROPERTIES:\n:KEYWORDS: %^{Keywords}p\n:END:\n%U\n%a\n\n")
@@ -458,7 +502,8 @@
      "/DONE" 'file))
 
   (setq org-todo-keywords
-        '((sequence "TODO(t)" "WAIT(w@/!)" "|" "DONE(d!)" "CANCELED(c@)")))
+        '((sequence "TODO(t)" "WAIT(w@/!)" "|" "DONE(d!)" "CANCELED(c@)")
+  	(sequence "MEET(m)" "|" "MET(n!)" "CANCELED(c@)")))
 #+end_src
 ** org-journal
 #+begin_src emacs-lisp :tangle yes
@@ -905,13 +950,13 @@
 #+end_src
 * AI
 #+begin_src emacs-lisp :tangle yes
-  ;; Install Khoj client from MELPA Stable
-  (use-package khoj
-    :ensure t
-    :pin melpa-stable
-    :bind ("C-c k" . 'khoj)
-    :config (setq khoj-api-key "kk-ribpOx_LfkFwo5fzGdZeWWRz-UsGMPbp-Zdy1rscEbg"
-  		khoj-server-url "https://app.khoj.dev"))
+  ;; ;; Install Khoj client from MELPA Stable
+  ;; (use-package khoj
+  ;;   :ensure t
+  ;;   :pin melpa-stable
+  ;;   :bind ("C-c k" . 'khoj)
+  ;;   :config (setq khoj-api-key "kk-ribpOx_LfkFwo5fzGdZeWWRz-UsGMPbp-Zdy1rscEbg"
+  ;; 		khoj-server-url "https://app.khoj.dev"))
 #+end_src
 * customization
 #+BEGIN_SRC emacs-lisp :tangle yes

@@ -1,6 +1,3 @@
-* Default
-** model-zoo
- - path :: ~/Documents/github/model-zoo
 * No Perspective
 ** dotfiles
  - path :: ~/Nutstore Files/Nutstore/codes/github/dotfiles
@@ -13,6 +10,57 @@
 * Tab basic.jl
 ** LearningML
  - path :: ~/Nutstore Files/Nutstore/codes/github/LearningML
-* Tab main.jl
-** Lux.jl
- - path :: ~/Documents/github/Lux.jl
+* Tab *Customize Group: Emacs*
+** dotfiles
+ - path :: ~/Nutstore Files/Nutstore/codes/github/dotfiles
+* Tab 20250517141714-julia.org
+** LearningML
+ - path :: ~/Nutstore Files/Nutstore/codes/github/LearningML
+* Tab 20250428221748-博士论文.org
+** linqiu
+ - path :: ~
+* Tab inbox.org
+** linqiu
+ - path :: ~
+* Tab gtd.org
+** hKjgL
+ - path :: ~/.julia/packages/LoopTools_jll/hKjgL
+* Tab notes.org
+** linqiu
+ - path :: ~
+* Tab main.typ
+** Learning
+ - path :: ~/Nutstore Files/Nutstore/codes/github/Learning
+* Tab init.el
+** dotfiles
+ - path :: ~/Nutstore Files/Nutstore/codes/github/dotfiles
+* Tab *Messages*
+** Learning
+ - path :: ~/Nutstore Files/Nutstore/codes/github/Learning
+* Tab *Warnings*
+** dotfiles
+ - path :: ~/Nutstore Files/Nutstore/codes/github/dotfiles
+* Tab *compilation*
+** dotfiles
+ - path :: ~/Nutstore Files/Nutstore/codes/github/dotfiles
+* Tab 20250509132256-research_projects.org
+** linqiu
+ - path :: ~
+* Tab 20250626094815-research_todos.org
+** linqiu
+ - path :: ~
+* Tab 20250716113743-aiforhs_jlab.org
+** linqiu15.github.io
+ - path :: ~/Nutstore Files/Nutstore/codes/github/linqiu15.github.io
+* Tab 20250721185316-modern_techniques_in_hadron_spectroscopy2024.org
+** Exercising
+ - path :: ~/Nutstore Files/Nutstore/codes/github/Exercising
+* Tab 20250609093337-odu.org
+** iterateKT
+ - path :: ~/Nutstore Files/Nutstore/codes/github/iterateKT
+* Tab 20251204204509-project_airoy.org
+** AI-DR
+ - path :: ~/Codes/AI-DR
+* No Tab
+** dotfiles
+ - path :: ~/Nutstore Files/Nutstore/codes/github/dotfiles
